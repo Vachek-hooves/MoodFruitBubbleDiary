@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, {useState, useEffect, useCallback} from 'react';
 import {
   View,
   Text,
@@ -13,8 +13,8 @@ import {
 } from 'react-native';
 import moment from 'moment';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useFocusEffect } from '@react-navigation/native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import {useFocusEffect} from '@react-navigation/native';
+import {SafeAreaView} from 'react-native-safe-area-context';
 
 const fruits = [
   {
@@ -38,7 +38,7 @@ const fruits = [
     image: require('../assets/orange.png'),
     title: 'Energy / Optimism',
     mood: 'Activity, desire to do something, inspiration. You are charged with movement, change, laughter. This day is your chance to use your energy correctly."',
-     description:
+    description:
       '"The sun is inside you. You are charged with movement, change, laughter. This day is your chance to use your energy correctly."',
   },
   {
@@ -62,13 +62,13 @@ const fruits = [
 const MOODS_STORAGE_KEY = '@MoodsByDate';
 
 const CalendarMoodSelector = () => {
-  const { width, height } = useWindowDimensions();
+  const {width, height} = useWindowDimensions();
   const isSmallScreen = width < 380;
 
   const [selectedDate, setSelectedDate] = useState<number | null>(null);
   const [selectedFruit, setSelectedFruit] = useState<string | null>(null);
   const [currentDate, setCurrentDate] = useState(moment());
-  const [moodsByDate, setMoodsByDate] = useState<{ [key: string]: string }>({});
+  const [moodsByDate, setMoodsByDate] = useState<{[key: string]: string}>({});
 
   const loadMoods = useCallback(async () => {
     try {
@@ -88,13 +88,16 @@ const CalendarMoodSelector = () => {
       loadMoods();
       setSelectedDate(null);
       setSelectedFruit(null);
-    }, [loadMoods])
+    }, [loadMoods]),
   );
 
   useEffect(() => {
     const saveMoods = async () => {
       try {
-        await AsyncStorage.setItem(MOODS_STORAGE_KEY, JSON.stringify(moodsByDate));
+        await AsyncStorage.setItem(
+          MOODS_STORAGE_KEY,
+          JSON.stringify(moodsByDate),
+        );
       } catch (e) {
         console.error('Failed to save moods to storage:', e);
       }
@@ -103,7 +106,10 @@ const CalendarMoodSelector = () => {
     saveMoods();
   }, [moodsByDate]);
 
-  const daysInMonth = Array.from({ length: currentDate.daysInMonth() }, (_, i) => i + 1);
+  const daysInMonth = Array.from(
+    {length: currentDate.daysInMonth()},
+    (_, i) => i + 1,
+  );
   const monthYear = currentDate.format('MMMM YYYY');
 
   const handlePrev = () => {
@@ -129,13 +135,16 @@ const CalendarMoodSelector = () => {
       };
 
       try {
-        await AsyncStorage.setItem(`mood_${dateKey}`, JSON.stringify(moodDataToSave));
+        await AsyncStorage.setItem(
+          `mood_${dateKey}`,
+          JSON.stringify(moodDataToSave),
+        );
         console.log(`Saved mood for ${dateKey}:`, moodDataToSave);
       } catch (e) {
         console.error(`Failed to save mood for ${dateKey} to storage:`, e);
       }
 
-      setMoodsByDate((prevMoods) => ({
+      setMoodsByDate(prevMoods => ({
         ...prevMoods,
         [dateKey]: fruitId,
       }));
@@ -217,8 +226,7 @@ const CalendarMoodSelector = () => {
   return (
     <ImageBackground
       source={require('../assets/background_calendar.png')}
-      style={styles.background}
-    >
+      style={styles.background}>
       {}
       <SafeAreaView style={styles.safeAreaContent}>
         {}
@@ -230,33 +238,41 @@ const CalendarMoodSelector = () => {
           />
 
           <View style={styles.headerContainer}>
-            <TouchableOpacity onPress={handlePrev}><Text style={styles.arrow}>{'<'}</Text></TouchableOpacity>
+            <TouchableOpacity onPress={handlePrev}>
+              <Text style={styles.arrow}>{'<'}</Text>
+            </TouchableOpacity>
             <Text style={styles.monthText}>{monthYear}</Text>
-            <TouchableOpacity onPress={handleNext}><Text style={styles.arrow}>{'>'}</Text></TouchableOpacity>
+            <TouchableOpacity onPress={handleNext}>
+              <Text style={styles.arrow}>{'>'}</Text>
+            </TouchableOpacity>
           </View>
 
           {!selectedDate ? (
             <FlatList
               data={daysInMonth}
-              keyExtractor={(item) => item.toString()}
+              keyExtractor={item => item.toString()}
               numColumns={7}
               contentContainerStyle={styles.calendarGrid}
-              renderItem={({ item }) => {
+              renderItem={({item}) => {
                 const dateKey = currentDate.date(item).format('YYYY-MM-DD');
                 const storedMood = moodsByDate[dateKey];
-                const fruitImageSource = storedMood ? fruits.find(f => f.id === storedMood)?.image : null;
+                const fruitImageSource = storedMood
+                  ? fruits.find(f => f.id === storedMood)?.image
+                  : null;
 
                 return (
                   <TouchableOpacity
                     style={[
                       styles.dayCircle,
                       selectedDate === item && styles.selectedDayCircle,
-                      storedMood && styles.dayCircleWithMood
+                      storedMood && styles.dayCircleWithMood,
                     ]}
-                    onPress={() => setSelectedDate(item)}
-                  >
+                    onPress={() => setSelectedDate(item)}>
                     {fruitImageSource ? (
-                      <Image source={fruitImageSource} style={styles.moodFruitImage} />
+                      <Image
+                        source={fruitImageSource}
+                        style={styles.moodFruitImage}
+                      />
                     ) : (
                       <Text style={styles.dayText}>{item}</Text>
                     )}
@@ -268,20 +284,24 @@ const CalendarMoodSelector = () => {
             <View style={responsiveStyles.cardFruits}>
               <Text style={styles.header}>Choose your mood:</Text>
               <View style={styles.grid}>
-                {fruits.map((fruit) => (
-                  <View
-                    key={fruit.id}
-                    style={responsiveStyles.fruitBox}
-                  >
-                    <Image source={fruit.image} style={responsiveStyles.fruitImage} />
+                {fruits.map(fruit => (
+                  <View key={fruit.id} style={responsiveStyles.fruitBox}>
+                    <Image
+                      source={fruit.image}
+                      style={responsiveStyles.fruitImage}
+                    />
 
-                    <TouchableOpacity onPress={() => handleFruitSelect(fruit.id)} style={styles.infoButton}>
+                    <TouchableOpacity
+                      onPress={() => handleFruitSelect(fruit.id)}
+                      style={styles.infoButton}>
                       <Text style={styles.info}>i</Text>
                     </TouchableOpacity>
                   </View>
                 ))}
               </View>
-              <TouchableOpacity onPress={handleBackToCalendar} style={styles.backButton}>
+              <TouchableOpacity
+                onPress={handleBackToCalendar}
+                style={styles.backButton}>
                 <Image
                   source={require('../assets/back_icon.png')}
                   style={styles.backIconImage}
@@ -292,15 +312,23 @@ const CalendarMoodSelector = () => {
           ) : (
             <ScrollView contentContainerStyle={responsiveStyles.card}>
               <Image
-                source={fruits.find((f) => f.id === selectedFruit)?.image}
+                source={fruits.find(f => f.id === selectedFruit)?.image}
                 style={responsiveStyles.fruitDetailImage}
               />
-              <Text style={responsiveStyles.title}>{fruits.find((f) => f.id === selectedFruit)?.title}</Text>
+              <Text style={responsiveStyles.title}>
+                {fruits.find(f => f.id === selectedFruit)?.title}
+              </Text>
               <Text style={responsiveStyles.label}>Mood:</Text>
-              <Text style={responsiveStyles.text}>{fruits.find((f) => f.id === selectedFruit)?.mood}</Text>
+              <Text style={responsiveStyles.text}>
+                {fruits.find(f => f.id === selectedFruit)?.mood}
+              </Text>
               <Text style={responsiveStyles.label}>Description:</Text>
-              <Text style={responsiveStyles.text}>{fruits.find((f) => f.id === selectedFruit)?.description}</Text>
-              <TouchableOpacity onPress={handleBackToFruits} style={styles.backButton}>
+              <Text style={responsiveStyles.text}>
+                {fruits.find(f => f.id === selectedFruit)?.description}
+              </Text>
+              <TouchableOpacity
+                onPress={handleBackToFruits}
+                style={styles.backButton}>
                 <Image
                   source={require('../assets/back_icon.png')}
                   style={styles.backIconImage}
@@ -318,13 +346,12 @@ const CalendarMoodSelector = () => {
 const styles = StyleSheet.create({
   background: {
     flex: 1,
-
   },
   safeAreaContent: {
     flex: 1,
   },
   contentContainer: {
-    paddingTop: 80, 
+    paddingTop: 80,
     flex: 1,
   },
   calendarImage: {
@@ -332,7 +359,7 @@ const styles = StyleSheet.create({
     height: 70,
     alignSelf: 'center',
     marginBottom: 20,
-    marginTop: -80, 
+    marginTop: -80,
   },
   headerContainer: {
     flexDirection: 'row',
@@ -346,7 +373,7 @@ const styles = StyleSheet.create({
     borderColor: '#fff',
     paddingVertical: 10,
     paddingHorizontal: 15,
-    marginTop: -20, 
+    marginTop: -20,
   },
   monthText: {
     fontSize: 24,
