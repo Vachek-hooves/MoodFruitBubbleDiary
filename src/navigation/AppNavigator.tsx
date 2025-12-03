@@ -1,6 +1,6 @@
 import React from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {NavigationContainer} from '@react-navigation/native';
+// import {NavigationContainer} from '@react-navigation/native';
 
 import SplashScreen from '../screens/SplashScreen';
 import OnboardingScreen from '../screens/OnboardingScreen';
@@ -12,22 +12,30 @@ export type RootStackParamList = {
   Onboarding: undefined;
   Home: undefined;
   RelaxPlay: undefined;
+  CustomeWelcome: undefined;
+  TargetScreen: {
+    isFirstVisit: boolean | null;
+    timeStamp: string;
+    url: string | null;
+    oneSignalPermissionStatus: boolean;
+  };
+  AppNavigator: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 const AppNavigator = () => {
   return (
-    <NavigationContainer>
-      <Stack.Navigator
-        initialRouteName="Splash"
-        screenOptions={{headerShown: false}}>
-        <Stack.Screen name="Splash" component={SplashScreen} />
-        <Stack.Screen name="Onboarding" component={OnboardingScreen} />
-        <Stack.Screen name="Home" component={BottomTabNavigator} />
-        <Stack.Screen name="RelaxPlay" component={PlinkoGameScreen} />
-      </Stack.Navigator>
-    </NavigationContainer>
+    // <NavigationContainer>
+    <Stack.Navigator
+      initialRouteName="Splash"
+      screenOptions={{headerShown: false}}>
+      <Stack.Screen name="Splash" component={SplashScreen} />
+      <Stack.Screen name="Onboarding" component={OnboardingScreen} />
+      <Stack.Screen name="Home" component={BottomTabNavigator} />
+      <Stack.Screen name="RelaxPlay" component={PlinkoGameScreen} />
+    </Stack.Navigator>
+    // </NavigationContainer>
   );
 };
 
